@@ -17890,6 +17890,13 @@ nk_input_button(struct nk_context *ctx, enum nk_buttons id, int x, int y, nk_boo
         in->mouse.down_pos.y = btn->clicked_pos.y;
     }
 #endif
+#ifdef __ANDROID__
+    /* correcting delta pos for avoiding window scaling by huge delta offset */
+    in->mouse.prev.x = in->mouse.pos.x;
+    in->mouse.prev.y = in->mouse.pos.y;
+    in->mouse.delta.x = 0;
+    in->mouse.delta.y = 0;
+#endif   
 }
 NK_API void
 nk_input_scroll(struct nk_context *ctx, struct nk_vec2 val)
@@ -19960,10 +19967,16 @@ nk_panel_end(struct nk_context *ctx)
 
         /* do window scaling */
         if (!(window->flags & NK_WINDOW_ROM)) {
+            struct nk_rect scaler_bbox = scaler;
+#ifdef __ANDROID__
+            /* do scale window scaling icon check rect due almost impossible to hit it by finger */
+            scaler_bbox.w += (32.0f * 1.5f);
+            scaler_bbox.h += (32.0f * 1.5f);
+#endif       
             struct nk_vec2 window_size = style->window.min_size;
             int left_mouse_down = in->mouse.buttons[NK_BUTTON_LEFT].down;
             int left_mouse_click_in_scaler = nk_input_has_mouse_click_down_in_rect(in,
-                    NK_BUTTON_LEFT, scaler, nk_true);
+                    NK_BUTTON_LEFT, scaler_bbox, nk_true);
 
             if (left_mouse_down && left_mouse_click_in_scaler) {
                 float delta_x = in->mouse.delta.x;
