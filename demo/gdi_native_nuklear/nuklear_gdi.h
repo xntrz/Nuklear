@@ -141,7 +141,14 @@ nk_gdi_draw_image(nk_gdi_ctx gdi, short x, short y, unsigned short w, unsigned s
     hDCBits = CreateCompatibleDC(gdi->memory_dc);
     GetObject(hbm, sizeof(BITMAP), (LPSTR)&bitmap);
     SelectObject(hDCBits, hbm);
-    StretchBlt(gdi->memory_dc, x, y, w, h, hDCBits, 0, 0, bitmap.bmWidth, bitmap.bmHeight, SRCCOPY);
+
+    BLENDFUNCTION blendfunc;
+    blendfunc.BlendOp = AC_SRC_OVER;
+    blendfunc.BlendFlags = 0;
+    blendfunc.SourceConstantAlpha = 255;
+    blendfunc.AlphaFormat = AC_SRC_ALPHA;
+    AlphaBlend(gdi->memory_dc, x, y, w, h, hDCBits, img.region[0], img.region[1], img.region[2], img.region[3], blendfunc);
+
     DeleteDC(hDCBits);
 }
 
