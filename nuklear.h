@@ -24216,8 +24216,9 @@ nk_draw_button_text(struct nk_command_buffer *out,
     else text.text = style->text_normal;
 
     text.text = nk_rgb_factor(text.text, style->color_factor_text);
-
-    text.padding = nk_vec2(0,0);
+    text.background = nk_rgb_factor(text.background, style->color_factor_text);
+    
+    text.padding = nk_vec2(0, 0);
     nk_widget_text(out, *content, txt, len, &text, text_alignment, font);
 }
 NK_LIB nk_bool
