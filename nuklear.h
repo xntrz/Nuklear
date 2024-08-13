@@ -22582,6 +22582,7 @@ nk_tree_state_base(struct nk_context *ctx, enum nk_tree_type type,
     label.h = style->font->height;
     text.text = nk_rgb_factor(style->tab.text, style->tab.color_factor);
     text.padding = nk_vec2(0,0);
+    text.background = nk_rgb(0, 0, 0);
     nk_widget_text(out, label, title, nk_strlen(title), &text,
         NK_TEXT_LEFT, style->font);}
 
