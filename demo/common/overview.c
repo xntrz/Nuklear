@@ -1,13 +1,16 @@
+#include <limits.h> /* INT_MAX */
+#include <time.h> /* struct tm, localtime */
+
 static int
 overview(struct nk_context *ctx)
 {
     /* window flags */
     static nk_bool show_menu = nk_true;
-    static nk_flags window_flags = NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_MINIMIZABLE;
+    static nk_flags window_flags = NK_WINDOW_TITLE|NK_WINDOW_BORDER|NK_WINDOW_SCALABLE|NK_WINDOW_MOVABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_SCROLL_AUTO_HIDE;
     nk_flags actual_window_flags = 0;
 
     /* widget flags */
-	static nk_bool disable_widgets = nk_false;
+    static nk_bool disable_widgets = nk_false;
 
     /* popups */
     static enum nk_style_header_align header_align = NK_HEADER_RIGHT;
@@ -225,6 +228,8 @@ overview(struct nk_context *ctx)
                 /* Basic widgets */
                 static int int_slider = 5;
                 static float float_slider = 2.5f;
+                static int int_knob = 5;
+                static float float_knob = 2.5f;
                 static nk_size prog_value = 40;
                 static float property_float = 2;
                 static int property_int = 10;
@@ -263,6 +268,12 @@ overview(struct nk_context *ctx)
                 nk_slider_float(ctx, 0, &float_slider, 5.0, 0.5f);
                 nk_labelf(ctx, NK_TEXT_LEFT, "Progressbar: %u" , (int)prog_value);
                 nk_progress(ctx, &prog_value, 100, NK_MODIFIABLE);
+
+                nk_layout_row(ctx, NK_STATIC, 40, 2, ratio);
+                nk_labelf(ctx, NK_TEXT_LEFT, "Knob int: %d", int_knob);
+                nk_knob_int(ctx, 0, &int_knob, 10, 1, NK_DOWN, 60.0f);
+                nk_labelf(ctx, NK_TEXT_LEFT, "Knob float: %.2f", float_knob);
+                nk_knob_float(ctx, 0, &float_knob, 5.0, 0.5f, NK_DOWN, 60.0f);
 
                 nk_layout_row(ctx, NK_STATIC, 25, 2, ratio);
                 nk_label(ctx, "Property float:", NK_TEXT_LEFT);
