@@ -847,6 +847,7 @@ nk_gdi_shutdown(nk_gdi_ctx gdi)
     DeleteObject(gdi->memory_dc);
     DeleteObject(gdi->bitmap);
     nk_free(&gdi->ctx);
+    free(gdi);
 }
 
 NK_API void
